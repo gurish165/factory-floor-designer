@@ -1,10 +1,10 @@
 # Factory Floor Designer Application PRD
 
 ## Overview
-Factory Floor Designer is a web application that helps users design their factory floor by creating layout designs with a grid and 3D objects in a Clash of Clans style. The application runs entirely client-side and can be deployed on GitHub Pages, making it easily accessible without backend dependencies. The application is optimized for both desktop and mobile browsers in landscape orientation, featuring collapsible sidebars and modals that can be revealed as needed to maximize the main viewport area without occluding the crucial design space.
+Factory Floor Designer is a web application that helps users design their factory floor by creating layout designs with a grid and 3D objects in a Clash of Clans style. The application runs entirely client-side and can be deployed on GitHub Pages, making it easily accessible without backend dependencies. The application is optimized for both desktop and mobile browsers in landscape orientation, featuring collapsible sidebars and modals that can be revealed as needed to maximize the main viewport area without occluding the crucial design space. In this PRD machines and "objects" are interchangeable. 
 
 ## Technical Stack
-The application should be built using Create React App with the most stable and up-to-date version of TypeScript available. For state management, Zustand is the preferred library due to its simplicity and performance. The engineering team is encouraged to utilize Lucide icons throughout the application for a consistent visual language. Three.js should be implemented for all 3D rendering requirements. Data persistence will rely on local browser storage to maintain user designs across sessions without requiring authentication or remote storage. CSS should all be done with tailwinds
+For state management, Zustand is the preferred library due to its simplicity and performance. The engineering team is encouraged to utilize Lucide icons throughout the application for a consistent visual language. Three.js should be implemented for all 3D rendering requirements. Data persistence will rely on local browser storage to maintain user designs across sessions without requiring authentication or remote storage. CSS should all be done with tailwinds, and should only have tones of black and white, no blue.
 
 ## Code Organization
 The engineer has flexibility in organizing the codebase, but should adhere to best front-end design practices. The project structure should consider eventual deployment to GitHub Pages, ensuring that all necessary build configurations are properly set up. Throughout the application, comprehensive logging should be implemented for all operations to facilitate debugging and future maintenance. While specific organizational patterns aren't mandated, the code should be structured in a way that promotes readability and maintainability.
@@ -17,6 +17,7 @@ The main viewport displays a Clash of Clans style perspective grid with a fixed 
 A critical aspect of the grid is the coordinate system visibility. The coordinate numbers must always be visible on the edges of the grid to help users orient themselves. When fully zoomed out, the grid should display numbers from 0 to 5000 in increments of 250, resulting in 20 labels per side. As users zoom in, the labeling system should maintain its clarity, with the maximum zoom level showing a 20x20 grid where each line is individually labeled from 1 to 20. This consistent labeling approach applies to both the birds-eye and isometric views, ensuring users always understand their position within the vast grid space.
 
 ### View Toggle
+It is important the view is in isometric style and not perspective.
 Located on the top right of the interface is a toggle button that allows users to switch between the default isometric view and a top-down 2D view (birds-eye perspective). When users click this button, the application should immediately re-render the canvas in the new perspective without any transitional animations. Both viewing modes must display all objects placed on the grid, though their visual representation will differ based on the perspective. In the isometric view, objects appear in their full 3D glory, while the birds-eye view presents only the top-down face of each 3D model. Both views adhere to the same zoom and pan mechanics, maintaining consistency in the user experience regardless of the chosen perspective.
 
 ### Navigation Controls
@@ -108,7 +109,7 @@ The application maintains feature parity between mobile and desktop experiences,
 ## UI/UX Details
 
 ### Design Style
-The entire application adheres to a dark mode color scheme with an Apple-like UI style, creating a modern, professional appearance that reduces eye strain during extended use sessions. The engineering team has discretion in selecting appropriate UI component libraries to achieve this aesthetic, provided they maintain consistency throughout the application.
+The entire application adheres to a very dark mode color scheme with an Apple-like /shadcn UI style, creating a modern, professional appearance tha engineering team has discretion in selecting appropriate UI component libraries to achieve this aesthetic, provided they maintain consistency throughout the application.
 
 For color selection of objects, the application implements a basic React color selector tool that gives users adequate choice while keeping the interface simple and intuitive. This straightforward approach to color selection aligns with the overall goal of making the application accessible to users regardless of their design expertise.
 
@@ -126,7 +127,7 @@ Beyond technical logging, the application provides visual feedback when operatio
 While optimization is not a primary consideration at this initial stage of development, the application should maintain reasonable performance on standard hardware. The engineering team can focus on implementing features correctly before addressing potential performance optimizations in future iterations.
 
 ## Implementation Notes
-The application intentionally omits editing functionality for existing objects/machines to avoid complications with objects that are already placed on the grid. This design decision simplifies both the user experience and the underlying implementation while still providing flexibility through the duplicate and delete options.
+The application intentionally omits editing functionality for existing objects/machines to avoid complications with objects/achines that are already placed on the grid. This design decision simplifies both the user experience and the underlying implementation while still providing flexibility through the duplicate and delete options.
 
 The coordinate system must be consistently applied across all views, ensuring that objects appear in the correct positions regardless of the selected perspective. This consistency is crucial for users who frequently switch between isometric and birds-eye views during their design process.
 

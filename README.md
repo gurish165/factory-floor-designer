@@ -1,46 +1,90 @@
-# Getting Started with Create React App
+# Factory Floor Designer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A web application for designing factory floor layouts with a 3D isometric grid and object placement.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 5000x5000 unit isometric grid with coordinate labels
+- Toggle between isometric (60-degree) and birds-eye (top-down) views
+- Zoom and pan controls for easy navigation
+- Object library with default "Mill" and "Wall" objects
+- Create custom objects with specific dimensions and colors
+- Place, rotate, and arrange objects on the grid
+- Save and manage multiple floorplans
+- Export and import floorplans as JSON
+- Mobile-responsive design
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React (Create React App)
+- TypeScript
+- Three.js for 3D rendering
+- Zustand for state management
+- Tailwind CSS for styling
+- React Router for navigation
+- Lucide React for icons
+- React-Colorful for color picking
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (version 14 or later)
+- npm or yarn
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+   ```
+   git clone https://github.com/gurish165/factory-floor-designer.git
+   cd factory-floor-designer
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Start the development server:
+   ```
+   npm start
+   ```
 
-### `npm run eject`
+4. Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Usage
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Canvas View
+- Use the mouse wheel or pinch gestures to zoom in/out
+- Click and drag (or swipe on mobile) to pan around the grid
+- Click the eye icon in the top-right to toggle between isometric and birds-eye views
+- Click the factory icon in the bottom-right to access the object library
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Object Library
+- Click the "+" card to create a new object
+- Specify name, dimensions, and color for new objects
+- Use the Import button to place an object on the grid
+- Use the Duplicate button to create a copy of an object
+- Use the Delete button to remove an object from the library
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Object Placement
+- When placing an object, it will appear at your mouse/touch position
+- Green glow indicates a valid placement, red indicates invalid
+- Use the rotation button to rotate the object in 90-degree increments
+- Click the check mark to confirm placement or X to cancel
 
-## Learn More
+### Floorplan Management
+- Click the menu icon in the top-left to open the floorplan panel
+- Use the "+" button to create a new floorplan or import an existing one
+- Click a floorplan name to switch to that layout
+- Use the edit icon to rename a floorplan
+- Use the download icon to export a floorplan as JSON
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## License
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- Design inspired by Clash of Clans building placement UI
+- Documentation based on the implementation steps from the PRD
