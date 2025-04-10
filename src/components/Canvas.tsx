@@ -5,7 +5,7 @@ import { Eye } from 'lucide-react';
 import log from 'loglevel';
 
 // Configure logging
-log.setLevel(log.levels.INFO);
+log.setLevel(log.levels.DEBUG);
 
 // Constants - made smaller for better visibility
 const GRID_SIZE = 100;
@@ -79,9 +79,18 @@ const Canvas = () => {
     window.addEventListener('resize', handleResize);
 
     // Mouse events for cursor state
-    const handleMouseDown = () => setIsPanning(true);
-    const handleMouseUp = () => setIsPanning(false);
-    const handleMouseLeave = () => setIsPanning(false); // Also reset on leave
+    const handleMouseDown = () => {
+      log.debug("Canvas mouse down"); 
+      setIsPanning(true);
+    }
+    const handleMouseUp = () => {
+      log.debug("Canvas mouse up");
+      setIsPanning(false);
+    }
+    const handleMouseLeave = () => {
+      log.debug("Canvas mouse leave");
+      setIsPanning(false);
+    } // Also reset on leave
     mount.addEventListener('mousedown', handleMouseDown);
     mount.addEventListener('mouseup', handleMouseUp);
     mount.addEventListener('mouseleave', handleMouseLeave);
@@ -92,6 +101,10 @@ const Canvas = () => {
       
       if (controlsRef.current) {
         controlsRef.current.update(); // Update controls (needed for damping)
+        // Log target position during panning attempts
+        if (isPanning) { 
+          log.debug("Panning - Controls Target:", controlsRef.current.target.x.toFixed(2), controlsRef.current.target.y.toFixed(2), controlsRef.current.target.z.toFixed(2));
+        }
       }
       
       if (rendererRef.current && cameraRef.current && sceneRef.current) {
@@ -215,7 +228,8 @@ const Canvas = () => {
     controls.enableZoom = true;
     controls.enableDamping = true;
     controls.dampingFactor = 0.1; // Smoother damping
-    controls.panSpeed = 2.0; // Increased pan speed further
+    controls.panSpeed = 3.0; // Increased pan speed even further
+    controls.screenSpacePanning = true; // Make panning more intuitive
     controls.zoomSpeed = 1.0;
     controls.target.set(0, 0, 0); // Explicitly set target to origin
 
