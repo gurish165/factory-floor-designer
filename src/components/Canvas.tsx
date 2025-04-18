@@ -207,24 +207,54 @@ const Canvas = () => {
       const interval = currentGridLevel.interval;
       const subdivisions = currentGridLevel.subdivisions;
       
-      // Calculate number of cells based on interval
-      const cells = Math.floor(gridSize / interval);
-      
-      // Create new grid
-      const grid = new THREE.GridHelper(
-        gridSize, 
-        cells * subdivisions, 
-        0x444444, // Major grid lines (lighter)
-        0x222222  // Minor grid lines (darker)
-      );
-      grid.rotation.x = Math.PI / 2; // Rotate grid to be on XY plane
+      // --- Create Custom Grid --- 
+      const gridGroup = new THREE.Group();
+      const majorLineMaterial = new THREE.LineBasicMaterial({ color: 0x444444, linewidth: 1 });
+      const minorLineMaterial = new THREE.LineBasicMaterial({ color: 0x222222, linewidth: 1 });
 
-      // Shift the whole helper so that the lower‑left corner starts at (0,0) – this matches the logical
-      // coordinate space we use elsewhere (labels, collision, etc.). The helper by default is centred at
-      // the origin, so we translate by half the grid size on X & Y.
-      grid.position.set(gridSize / 2, gridSize / 2, 0);
-      scene.add(grid);
-      gridRef.current = grid;
+      const majorVertices: number[] = [];
+      const minorVertices: number[] = [];
+      const minorInterval = interval / subdivisions;
+
+      // Generate vertices for lines
+      for (let i = 0; i <= gridSize; i += minorInterval) {
+        const isMajor = Math.abs(i % interval) < 1e-6 || Math.abs((i % interval) - interval) < 1e-6; // Check if it's a major line (handle floating point)
+        const vertices = isMajor ? majorVertices : minorVertices;
+
+        // Add vertices only if it's a major OR a minor line (not both)
+        if (!isMajor || (isMajor && i % interval === 0)) {
+            // Horizontal line
+            vertices.push(0, i, 0); // Start point
+            vertices.push(gridSize, i, 0); // End point
+
+            // Vertical line
+            vertices.push(i, 0, 0); // Start point
+            vertices.push(i, gridSize, 0); // End point
+        }
+      }
+
+      // Create major lines geometry and mesh
+      if (majorVertices.length > 0) {
+        const majorGeometry = new THREE.BufferGeometry();
+        majorGeometry.setAttribute('position', new THREE.Float32BufferAttribute(majorVertices, 3));
+        const majorLines = new THREE.LineSegments(majorGeometry, majorLineMaterial);
+        gridGroup.add(majorLines);
+      }
+
+      // Create minor lines geometry and mesh
+      if (minorVertices.length > 0) {
+        const minorGeometry = new THREE.BufferGeometry();
+        minorGeometry.setAttribute('position', new THREE.Float32BufferAttribute(minorVertices, 3));
+        const minorLines = new THREE.LineSegments(minorGeometry, minorLineMaterial);
+        gridGroup.add(minorLines);
+      }
+
+      // Position the entire grid group so that (0,0) is at the world origin's corner
+      // This matches the GridHelper behavior and label positioning logic
+      // gridGroup.position.set(gridSize / 2, gridSize / 2, 0); // NO! GridHelper was centered, we want corner at 0,0
+      gridGroup.position.set(0, 0, 0);
+      scene.add(gridGroup);
+      gridRef.current = gridGroup;
       
       // Calculate visible area based on camera frustum
       const aspect = camera.right / camera.top;
@@ -284,8 +314,8 @@ const Canvas = () => {
         }
       }
       
-      // Translate labels by the same offset so that they sit flush with the new grid position.
-      labelGroup.position.set(gridSize / 2, gridSize / 2, 0);
+      // Labels are positioned relative to the grid corners (0,0), no extra translation needed
+      labelGroup.position.set(0, 0, 0);
       
       // Add label group to scene
       scene.add(labelGroup);
@@ -298,8 +328,7 @@ const Canvas = () => {
       console.log('[DEBUG] Grid helper & labels added to scene', {
         interval,
         subdivisions,
-        cells,
-        gridPosition: grid.position.toArray(),
+        gridPosition: gridGroup.position.toArray(), // Use the new group
         cameraPosition: camera.position.toArray(),
         cameraZoom: zoom,
       });
@@ -533,6 +562,20 @@ const Canvas = () => {
         renderer.dispose();
       }
       
+      // --- Custom Grid Cleanup ---
+      if (gridRef.current && gridRef.current instanceof THREE.Group) {
+          gridRef.current.children.forEach((child) => {
+              if (child instanceof THREE.LineSegments) {
+                  child.geometry.dispose();
+                  if (child.material instanceof THREE.Material) {
+                     child.material.dispose();
+                  } else if (Array.isArray(child.material)) {
+                     child.material.forEach(material => material.dispose());
+                  }
+              }
+          });
+      }
+      // --- Standard Mesh Cleanup ---
       // Clean up any remaining Three.js objects
       if (scene) {
         scene.traverse((object) => {
